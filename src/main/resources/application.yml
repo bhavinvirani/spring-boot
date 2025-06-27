@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: my-application
+  datasource:
+    url: jdbc:mysql://localhost:3306/student_tracker
+    username: springstudent
+    password: springstudent
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  cache:
+    type: redis
+    cache-names:
+      - courses
+      - students
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# security configuration
+server:
+  servlet:
+    context-path: /api
+# Logging configuration
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+
