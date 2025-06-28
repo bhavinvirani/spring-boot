@@ -6,6 +6,7 @@ import com.learn.springrest.utils.ApiResponse;
 import com.learn.springrest.utils.PagedResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class StudentController {
 
     // Get all students
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<PagedResponse<StudentDTO>>> getAllStudents(@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "id") String sortBy) {
         PagedResponse<StudentDTO> response = studentService.getAllStudents(keyword, page, size, sortBy);
         return ResponseEntity.ok(ApiResponse.success(response));

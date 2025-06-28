@@ -11,8 +11,13 @@ spring:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate:
-        format_sql: true
+        hibernate:
+            format_sql: true
+            use_sql_comments: false
+  security:
+    user:
+      name: user
+      password: password
   cache:
     type: redis
     cache-names:
@@ -30,8 +35,15 @@ server:
 # Logging configuration
 logging:
   level:
-    org.springframework: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework: warn
+
+# Security configuration
+security:
+  jwt:
+    secret: bXktdmVyeS1zZWNyZXQta2V5LXdoaWNoLWlzLWxvbmctZW5vdWdoMTIz
+    expiration: 3600000 # 1 hour in milliseconds
+    header: Authorization
+    prefix: Bearer
+
 
 

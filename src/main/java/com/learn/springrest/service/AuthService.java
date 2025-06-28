@@ -1,7 +1,16 @@
 package com.learn.springrest.service;
 
-import org.springframework.stereotype.Service;
+import com.learn.springrest.dto.auth.AuthenticationResponseDTO;
+import com.learn.springrest.dto.auth.LoginDTO;
+import com.learn.springrest.dto.auth.RegisterDTO;
+import com.learn.springrest.model.User;
 
-@Service
-public class AuthService {
+public interface AuthService {
+
+    // Register
+    User register(RegisterDTO user);
+
+    // Login
+    User login(LoginDTO input);
+
 }
