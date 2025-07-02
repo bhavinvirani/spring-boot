@@ -1,6 +1,7 @@
 package com.learn.springrest.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -30,19 +32,9 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToOne(cascade = CascadeType.REMOVE)
+    @NotNull(message = "Role cannot be null")
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
-
-    public Role getRole() {
-        return role;
-    }
-
-    public User setRole(Role role) {
-        this.role = role;
-
-        return this;
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

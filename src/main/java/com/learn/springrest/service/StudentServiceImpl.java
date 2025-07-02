@@ -55,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Cacheable(value = "students", key = "#id")
+//    @Cacheable(value = "students", key = "#id")
     public StudentDTO getStudentById(Integer id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id: " + id));

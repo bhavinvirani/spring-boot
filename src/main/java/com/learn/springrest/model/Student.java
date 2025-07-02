@@ -52,5 +52,4 @@ public class Student {
         course.getStudents().remove(this);
     }
 
-
 }

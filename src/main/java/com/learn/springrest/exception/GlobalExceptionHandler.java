@@ -3,6 +3,7 @@ package com.learn.springrest.exception;
 import com.learn.springrest.utils.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +29,12 @@ public class GlobalExceptionHandler {
             errors.put(field, msg);
         });
         return ApiResponse.error("Validation failed", errors);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ApiResponse<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        log.error("Data integrity violation: {}", ex.getMessage(), ex);
+        return ApiResponse.error("Duplicate entry or constraint violation: " + ex.getRootCause().getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

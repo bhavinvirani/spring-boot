@@ -7,12 +7,10 @@ import com.learn.springrest.utils.PagedResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/student")
-
 public class StudentController {
 
     private final StudentService studentService;
@@ -23,7 +21,6 @@ public class StudentController {
 
     // Get all students
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<ApiResponse<PagedResponse<StudentDTO>>> getAllStudents(@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size, @RequestParam(defaultValue = "id") String sortBy) {
         PagedResponse<StudentDTO> response = studentService.getAllStudents(keyword, page, size, sortBy);
         return ResponseEntity.ok(ApiResponse.success(response));
@@ -32,11 +29,13 @@ public class StudentController {
     // Get student by id
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<StudentDTO>> getStudentById(@PathVariable Integer id) {
+        System.out.println("Fetching student with ID: " + id);
         StudentDTO studentDTO = studentService.getStudentById(id);
         return ResponseEntity.ok(ApiResponse.success(studentDTO));
     }
 
     // Create student
+//    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @PostMapping
     public ResponseEntity<ApiResponse<StudentDTO>> createStudent(@RequestBody StudentDTO studentDTO) {
         StudentDTO createdStudentDTO = studentService.createStudent(studentDTO);

@@ -1,0 +1,66 @@
+version: '3.8'  # Specifies the Docker Compose file format version
+
+services:
+
+  # Service: Spring Boot Application
+  app:
+    container_name: springboot-app
+    image: bhavinvirani/springboot-app:latest  # Replace it with your built app image name
+    build:
+      context: . # Context for the build (current directory)
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/student_tracker  # JDBC URL pointing to MySQL container
+      SPRING_DATASOURCE_USERNAME: springstudent  # DB username
+      SPRING_DATASOURCE_PASSWORD: springstudent  # DB password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # Hibernate setting to auto-create/update schema
+    depends_on:
+      - db  # Ensures MySQL container starts before the app starts
+    restart: unless-stopped  # Automatically restarts the container unless explicitly stopped
+    networks:
+      - backend  # Connect to the backend network
+
+  # Service: MySQL Database
+  db:
+    container_name: mysql-db
+    image: mysql:8.0  # Use an official MySQL image
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass  # Root user password (secure this in prod!)
+      MYSQL_DATABASE: student_tracker  # Name of the default database
+      MYSQL_USER: springstudent  # Custom DB user
+      MYSQL_PASSWORD: springstudent  # Password for the DB user
+    volumes:
+      - ./mysql-data:/var/lib/mysql  # Persist database data across container restarts
+    restart: unless-stopped
+    networks:
+      - backend
+
+
+#  phpmyadmin:
+#    container_name: phpmyadmin
+#    image: phpmyadmin/phpmyadmin:latest  # Use the latest official phpMyAdmin image
+#    environment:
+#      PMA_HOST: db  # Hostname of the MySQL server (the db service)
+#      PMA_PORT: 3306  # Port of the MySQL server
+#      PMA_USER: springstudent  # User to connect to MySQL
+#      PMA_PASSWORD: springstudent  # Password for the user
+#    ports:
+#      - "8081:80"  # Expose phpMyAdmin on port 8081
+#    depends_on:
+#      - db  # Ensure MySQL is running before starting phpMyAdmin
+#    restart: unless-stopped
+#    networks:
+#      - backend  # Connect to the backend network
+
+# Declare named volumes for persistent storage
+volumes:
+  mysql-data:
+    driver: local  # Use a local driver for persistent storage. This ensures data is not lost when containers are stopped or removed.
+
+# Define a custom network to isolate backend services
+networks:
+  backend:
+    driver: bridge  # Bridge driver (default) is suitable for single-host production setup
+
